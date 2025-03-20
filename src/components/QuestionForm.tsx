@@ -78,6 +78,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, photoPreview }) =
 
       {photoPreview && (
         <div className="relative w-full h-48 md:h-64 mb-6 rounded-lg overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img 
             src={photoPreview} 
             alt="アップロードされた写真"

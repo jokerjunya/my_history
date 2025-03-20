@@ -11,6 +11,11 @@ interface MemoryCardProps {
 const MemoryCard: React.FC<MemoryCardProps> = ({ memory, onDelete, onEdit }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   
+  // デフォルトのプレースホルダー画像を設定
+  const defaultImage = '/images/placeholder1.jpg';
+  // 画像パスの処理
+  const imageSrc = memory.imageUrl || defaultImage;
+  
   return (
     <div 
       className={`memory-card bg-white rounded-lg shadow-md overflow-hidden mb-6 transition-all duration-300 ${
@@ -20,11 +25,12 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, onDelete, onEdit }) => 
       <div className="flex flex-col md:flex-row gap-4">
         <div className="relative h-48 md:h-64 md:w-1/3 rounded-lg overflow-hidden">
           <Image
-            src={memory.imageUrl || '/images/placeholder1.jpg'}
+            src={imageSrc}
             alt={`写真 - ${memory.event}`}
             fill
             style={{ objectFit: 'cover' }}
             className="rounded-lg"
+            unoptimized={true}
           />
         </div>
         
