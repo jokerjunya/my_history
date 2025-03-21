@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Image from 'next/image';
 import { PhotoMemory } from '../types';
 
 interface MemoryCardProps {
@@ -24,13 +23,11 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, onDelete, onEdit }) => 
     >
       <div className="flex flex-col md:flex-row gap-4">
         <div className="relative h-48 md:h-64 md:w-1/3 rounded-lg overflow-hidden">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={imageSrc}
             alt={`写真 - ${memory.event}`}
-            fill
-            style={{ objectFit: 'cover' }}
-            className="rounded-lg"
-            unoptimized={true}
+            className="w-full h-full object-cover rounded-lg"
           />
         </div>
         
