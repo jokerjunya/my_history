@@ -10,10 +10,16 @@ interface MemoryCardProps {
 const MemoryCard: React.FC<MemoryCardProps> = ({ memory, onDelete, onEdit }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   
-  // デフォルトのプレースホルダー画像を設定
-  const defaultImage = '/images/placeholder1.jpg';
   // 画像パスの処理
-  const imageSrc = memory.imageUrl || defaultImage;
+  let imageSrc = memory.imageUrl;
+  
+  // 画像パスが相対パスの場合、正しく表示されるよう処理
+  if (imageSrc && !imageSrc.startsWith('http') && !imageSrc.startsWith('data:') && !imageSrc.startsWith('blob:')) {
+    // 先頭に/が付いていない場合は追加
+    if (!imageSrc.startsWith('/')) {
+      imageSrc = `/${imageSrc}`;
+    }
+  }
   
   return (
     <div 
@@ -28,6 +34,12 @@ const MemoryCard: React.FC<MemoryCardProps> = ({ memory, onDelete, onEdit }) => 
             src={imageSrc}
             alt={`写真 - ${memory.event}`}
             className="w-full h-full object-cover rounded-lg"
+            onError={(e) => {
+              // 画像読み込みエラー時にデフォルト画像を表示
+              const target = e.target as HTMLImageElement;
+              target.onerror = null; // 無限ループ防止
+              target.src = '/images/family_birthday.jpg'; // デフォルト画像に置き換え
+            }}
           />
         </div>
         

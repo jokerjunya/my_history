@@ -1,9 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
+import { useMemories } from '../hooks/useMemories';
+import { PhotoMemory } from '../types';
 
 const ImportPhotos: React.FC = () => {
   const router = useRouter();
+  const { addMemory } = useMemories();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
@@ -56,22 +59,23 @@ const ImportPhotos: React.FC = () => {
     setIsUploading(true);
     
     try {
-      // 実際の実装では、ここでファイルをサーバーにアップロードし、
-      // 保存された画像URLを受け取る処理を行います
-      
-      // この例ではプレビューURLをローカルストレージに保存して模擬的に実装
-      const savedImages = JSON.parse(localStorage.getItem('importedImages') || '[]');
-      
-      // 新しい画像情報を作成
-      const newImages = selectedFiles.map((file, index) => ({
-        id: `img_${Date.now()}_${index}`,
-        name: file.name,
-        url: previewUrls[index], // 実際の実装ではサーバーから返されたURLを使用
-        uploadedAt: new Date().toISOString()
-      }));
-      
-      // ローカルストレージに保存
-      localStorage.setItem('importedImages', JSON.stringify([...newImages, ...savedImages]));
+      // 新しい画像情報を作成して思い出データとして保存
+      for (let i = 0; i < selectedFiles.length; i++) {
+        const file = selectedFiles[i];
+        const imageUrl = previewUrls[i];
+        
+        // 簡易的な思い出データを作成
+        const memoryData = {
+          location: '',
+          people: '',
+          event: `インポート写真 ${i + 1}`,
+          impression: '新しくインポートした写真',
+          year: new Date().getFullYear().toString()
+        };
+        
+        // 思い出を追加（useMemoriesフックのaddMemory関数を使用）
+        addMemory(memoryData, imageUrl);
+      }
       
       // すべてのプレビューURLを解放
       previewUrls.forEach(url => URL.revokeObjectURL(url));
