@@ -72,4 +72,24 @@ export const sampleMemories: PhotoMemory[] = [
     story: '2010年、学校で同級生たちと卒業式に参加しました。クラスを代表してあなたがスピーチを行い、多くの人が涙を流したことが特に印象に残っています。数年間共に過ごした仲間との別れを惜しみながらも、新たな一歩を踏み出す決意に満ちていました。この瞬間はあなたにとって特別な思い出です。',
     year: '2010',
   },
-]; 
+];
+
+/**
+ * ローカルストレージから思い出を取得し、サンプルデータと合わせて返す関数
+ * 
+ * @returns 全ての思い出データの配列
+ */
+export const getMockMemories = (): PhotoMemory[] => {
+  // ブラウザ環境でのみローカルストレージにアクセス
+  if (typeof window !== 'undefined') {
+    try {
+      const localMemories = JSON.parse(localStorage.getItem('memories') || '[]');
+      return [...localMemories, ...sampleMemories];
+    } catch (error) {
+      console.error('ローカルストレージからのデータ読み込みエラー:', error);
+    }
+  }
+  
+  // サーバーサイドレンダリングやローカルストレージが利用できない場合はサンプルデータのみ返す
+  return [...sampleMemories];
+}; 
